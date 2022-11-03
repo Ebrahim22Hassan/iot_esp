@@ -1,5 +1,4 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iot_esp/cubit/led_cubit.dart';
@@ -38,7 +37,7 @@ class HomePage extends StatelessWidget {
                 onTap: (index) {
                   cubit.changeCurrentScreen(index);
                 },
-                items: [
+                items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.settings),
                     label: "Control",
