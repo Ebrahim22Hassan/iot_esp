@@ -40,6 +40,7 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
@@ -55,5 +56,21 @@
       });
     });
   </script>
+  <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAm4Lo0ZcZ-c2NKQAARetkyF-ywSFY1lp8",
+        authDomain: "flutter-iot-esp.firebaseapp.com",
+        databaseURL: "https://flutter-iot-esp-default-rtdb.firebaseio.com",
+        projectId: "flutter-iot-esp",
+        storageBucket: "flutter-iot-esp.appspot.com",
+        messagingSenderId: "746642453589",
+        appId: "1:746642453589:web:e507cd936a7e46f17ed0dc",
+        measurementId: "G-YW6ZDPN351"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
 </body>
 </html>

@@ -1,31 +1,38 @@
-import 'dart:io';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:iot_esp/screens/control_screen.dart';
 import 'package:iot_esp/screens/graph_screen.dart';
 import 'package:iot_esp/screens/reading_screen.dart';
-import 'package:iot_esp/screens/rgb_screen.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:http/http.dart' as http;
+import 'package:rainbow_color/rainbow_color.dart';
 part 'led_state.dart';
 
 class LedCubit extends Cubit<LedState> {
-  LedCubit() : super(LedInitial());
+  LedCubit(this.sensorReading) : super(LedInitial());
 
   bool ledON = true;
   var sensorReading;
   var minutes;
   final dataBase = FirebaseDatabase.instance.ref();
 
-  int index = 0;
-  List<Widget> activeScreen = [ControlScreen(), RGBScreen(), GraphScreen()];
+  int index = 1;
+  List<Widget> activeScreen = const [
+    ReadingScreen(),
+    ControlScreen(),
+    GraphScreen()
+  ];
 
   void changeCurrentScreen(int screen) {
     index = screen;
     emit(NavBarChanged());
+  }
+
+  bool motorActive = false;
+  void updateColor() {
+    motorActive = !motorActive;
+    emit(ContainerColorChanged());
   }
 
   List<IconData> activeFloatingIcon = [
@@ -37,38 +44,41 @@ class LedCubit extends Cubit<LedState> {
   void floatingActionButtonPressed(BuildContext context) {
     switch (index) {
       case 1:
-        getImage();
+        //getImage();
         break;
       case 2:
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReadingScreen(),
+              builder: (context) => const ReadingScreen(),
             ));
     }
   }
 
-  var rColor, gColor, bColor;
-  Color rgbColor = Colors.red;
+  var activeColor = Rainbow(spectrum: [
+    const Color(0xFFC421A0),
+    const Color(0xFF6D04E2),
+    const Color(0xFF1086D4),
+    const Color(0xFF05E9ED), //
+    const Color(0xFF33C0BA),
+    const Color(0xFFE4262F),
+    const Color(0xFFBA0000) //
+  ], rangeStart: 0.0, rangeEnd: 1.0);
 
-  void rgbColorChanged(r, g, b) {
-    emit(RGBColorChanging());
-    rColor = r;
-    gColor = g;
-    bColor = b;
-    rgbColor = Color.fromRGBO(r, g, b, 1);
-    final child = dataBase.child('esp/');
-    child.update({
-      'rColor': r,
-      'gColor': g,
-      'bColor': b,
-    }).then((value) {
-      emit(RGBColorChanged());
-    });
-  }
+  List<Color> activeBSColor = [
+    const Color(0xFF1086D4).withOpacity(0.8),
+    const Color(0xFF33C0BA).withOpacity(0.8),
+    const Color(0xFFC421A0).withOpacity(0.8),
+  ];
+
+  List<Color> activeBGColor = const [
+    Color(0xFF1086D4),
+    Color(0xFF33C0BA),
+    Color(0xFFC421A0),
+  ];
 
   void getDataB() {
-    // emit(DataGetting());
+    emit(DataGetting());
     // dataBase.child('ESP').once().then((snap) {
     //   sensorReading = snap.value['LDR'] is int
     //       ? snap.value['LDR']
@@ -86,22 +96,18 @@ class LedCubit extends Cubit<LedState> {
     //   getJson();
     // });
     dataBase.onValue.listen((DatabaseEvent event) async {
-      final data = event.snapshot.value;
+      //final data = event.snapshot.value;
       final ldrSnap = await dataBase.child('esp/LDR').get();
       final minutesSnap = await dataBase.child('esp/minutes').get();
-      final rSnap = await dataBase.child('esp/rColor').get();
-      final gSnap = await dataBase.child('esp/gColor').get();
-      final bSnap = await dataBase.child('esp/bColor').get();
+
       sensorReading = ldrSnap.value;
       minutes = minutesSnap.value;
-      rColor = rSnap.value;
-      gColor = gSnap.value;
-      bColor = bSnap.value;
-      rgbColor = Color.fromRGBO(rColor, gColor, bColor, 1);
-      print(data);
+
+      //print(data);
       //print(snap.value);
       emit(DataGot());
-      getJson() as Map;
+      getJson();
+      //getJson() as Map;
     });
 
     dataBase.child('esp').onChildChanged.listen((event) {
@@ -123,25 +129,17 @@ class LedCubit extends Cubit<LedState> {
     final child = dataBase.child('esp/');
     int boolString = ledON ? 1 : 0;
     child.update({'LED': boolString});
-    print(ledON);
+    //print(ledON);
     emit(LedChanged());
   }
 
-  Future getImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    emit(PhotoTaking());
-    final xFile = await imagePicker.pickImage(source: ImageSource.camera);
-    print(xFile!.path);
-
-    emit(PhotoToked());
-    final PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImageProvider(
-            Image.file(File(xFile.path)).image);
-    rgbColorChanged(
-      paletteGenerator.colors.first.red,
-      paletteGenerator.colors.first.green,
-      paletteGenerator.colors.first.green,
-    );
+  void motorChange() {
+    emit(MotorPressed());
+    motorActive = !motorActive;
+    final child = dataBase.child('esp/');
+    int boolString = motorActive ? 1 : 0;
+    child.update({'motor': boolString});
+    emit(MotorChanged());
   }
 
   List<dynamic>? ldrValues;
@@ -159,7 +157,7 @@ class LedCubit extends Cubit<LedState> {
         "https://script.google.com/macros/s/AKfycbxtotcYO5aDFqCwzqsAcbdX050bSTu1jUqVTSInq979UFwq9lZkgRhaUBjJYhmmGZjO/exec");
     json = await http.read(url).then((value) {
       ldrValues = jsonDecode(value);
-      print(ldrValues);
+      //print(ldrValues);
 
       itemCount = ldrValues!.length < 60 ? ldrValues!.length : 60;
       var dataUsed = ldrValues!.sublist(0, itemCount);

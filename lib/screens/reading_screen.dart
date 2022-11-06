@@ -8,28 +8,54 @@ class ReadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => LedCubit()..getJson(),
+      create: (BuildContext context) => LedCubit(7.0)..getJson(),
       child: BlocConsumer<LedCubit, LedState>(
         listener: (BuildContext context, LedState state) {},
         builder: (BuildContext context, LedState state) {
           LedCubit cubit = BlocProvider.of(context);
           return Scaffold(
             body: state is JsonGet
-                ? const Center(
-                    child: SingleChildScrollView(),
+                ? Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[
+                            Colors.white,
+                            const Color(0xFF1086D4).withOpacity(0.5),
+                            const Color(0xFF1086D4),
+                          ]),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.separated(
-                      itemCount: cubit.itemCount,
-                      itemBuilder: (context, index) {
-                        return readingBuilder(cubit, index - 1, context);
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Colors.grey,
-                        );
-                      },
+                : Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[
+                            Colors.white,
+                            const Color(0xFF1086D4).withOpacity(0.5),
+                            const Color(0xFF1086D4),
+                          ]),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.separated(
+                        itemCount: cubit.itemCount,
+                        itemBuilder: (context, index) {
+                          return readingBuilder(cubit, index - 1, context);
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            color: Colors.grey,
+                          );
+                        },
+                      ),
                     ),
                   ),
           );

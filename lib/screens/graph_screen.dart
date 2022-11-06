@@ -11,50 +11,89 @@ class GraphScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => LedCubit()..getJson(),
+      create: (BuildContext context) => LedCubit(7.0)..getJson(),
       child: BlocConsumer<LedCubit, LedState>(
         listener: (BuildContext context, LedState state) {},
         builder: (BuildContext context, LedState state) {
           LedCubit cubit = BlocProvider.of(context);
-          print(cubit.data);
-          print('*****************');
-          return Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Center(
-                  child: Text(
-                    "Graph",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 33,
+          // print(cubit.data);
+          // print('*****************');
+          return Scaffold(
+            body: state is JsonGet
+                ? Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[
+                            Colors.white,
+                            const Color(0xFFC421A0).withOpacity(0.5),
+                            const Color(0xFFC421A0),
+                          ]),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: <Color>[
+                            Colors.white,
+                            const Color(0xFFC421A0).withOpacity(0.5),
+                            const Color(0xFFC421A0),
+                          ]),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: Text(
+                              "Graph",
+                              style: TextStyle(
+                                  fontSize: 28,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            child: LineGraph(
+                              features: [
+                                Feature(
+                                  title: "pH Sensor Graph",
+                                  color: Colors.red,
+                                  data: List.from(cubit.data.reversed),
+                                ),
+                              ],
+                              size:
+                                  Size(cubit.data.length * 80.toDouble(), 400),
+                              labelX: List.from(cubit.time.reversed),
+                              labelY: const [
+                                '20%',
+                                '40%',
+                                '60%',
+                                '80%',
+                                '100%'
+                              ],
+                              graphColor: Colors.black,
+                              graphOpacity: 0.1,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  reverse: true,
-                  child: LineGraph(
-                    features: [
-                      Feature(
-                        title: "LDR Graph",
-                        color: Colors.orangeAccent,
-                        data: List.from(cubit.data.reversed),
-                      ),
-                    ],
-                    size: Size(cubit.data.length * 100.toDouble(), 400),
-                    labelX: List.from(cubit.time.reversed),
-                    labelY: const ['20%', '40%', '60%', '80%', '100%'],
-                    graphColor: Colors.blue,
-                    graphOpacity: 0.2,
-                  ),
-                ),
-              ],
-            ),
           );
         },
       ),

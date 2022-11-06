@@ -1,65 +1,64 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iot_esp/cubit/led_cubit.dart';
 
-import 'model.dart';
-
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
-  var db = DbConnect();
+  const HomePage({Key? key}) : super(key: key);
 
-  Future getData() async {
-    return db.fetchData();
-  }
+  // var db = DbConnect();
+  //
+  // Future getData() async {
+  //   return db.fetchData();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LedCubit>(
-      create: (BuildContext context) => LedCubit()..getDataB(),
+      create: (BuildContext context) => LedCubit(7.0)..getDataB(),
       child: BlocConsumer<LedCubit, LedState>(
         listener: (BuildContext context, LedState state) {},
         builder: (BuildContext context, LedState state) {
           LedCubit cubit = BlocProvider.of(context);
           if (state is DataGetting) {
-            print("Geting Data");
+            print("Getting Data");
           }
           return ThemeSwitchingArea(
-            child: Scaffold(
-              appBar: AppBar(
-                leading: const Icon(Icons.lightbulb_outline_sharp),
-                title: const Text("IoT"),
-                centerTitle: true,
+            child: SafeArea(
+              child: Scaffold(
+                body: cubit.activeScreen[cubit.index],
+                bottomNavigationBar: CurvedNavigationBar(
+                  index: cubit.index,
+                  onTap: (index) {
+                    cubit.index = index;
+                    cubit.changeCurrentScreen(cubit.index);
+                  },
+                  //backgroundColor: cubit.activeBSColor[cubit.index],
+                  backgroundColor: cubit.index == 1
+                      ? cubit.activeColor[cubit.sensorReading / 14]
+                          .withOpacity(0.4)
+                      : cubit.activeBSColor[cubit.index],
+                  //color: cubit.activeBGColor[cubit.index],
+                  color: cubit.index == 1
+                      ? cubit.activeColor[cubit.sensorReading / 14]
+                      : cubit.activeBGColor[cubit.index],
+                  animationDuration: const Duration(milliseconds: 500),
+                  items: const [
+                    Icon(Icons.table_chart_outlined),
+                    Icon(Icons.home),
+                    Icon(Icons.bar_chart),
+                  ],
+                ),
+                // floatingActionButton: cubit.index == 0
+                //     ? Container()
+                //     : FloatingActionButton(
+                //         onPressed: () {
+                //           cubit.floatingActionButtonPressed(context);
+                //         },
+                //         child: Icon(cubit.activeFloatingIcon[cubit.index]),
+                //       ),
               ),
-              body: cubit.activeScreen[cubit.index],
-              bottomNavigationBar: BottomNavigationBar(
-                currentIndex: cubit.index,
-                onTap: (index) {
-                  cubit.changeCurrentScreen(index);
-                },
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings),
-                    label: "Control",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.color_lens_outlined),
-                    label: "RGB",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.photo),
-                    label: "Graph",
-                  ),
-                ],
-              ),
-              floatingActionButton: cubit.index == 0
-                  ? Container()
-                  : FloatingActionButton(
-                      onPressed: () {
-                        cubit.floatingActionButtonPressed(context);
-                      },
-                      child: Icon(cubit.activeFloatingIcon[cubit.index]),
-                    ),
             ),
           );
         },

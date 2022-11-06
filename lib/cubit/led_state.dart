@@ -13,7 +13,13 @@ class LedPressed extends LedState {}
 
 class LedChanged extends LedState {}
 
+class MotorPressed extends LedState {}
+
+class MotorChanged extends LedState {}
+
 class NavBarChanged extends LedState {}
+
+class ContainerColorChanged extends LedState {}
 
 class RGBColorChanging extends LedState {}
 
