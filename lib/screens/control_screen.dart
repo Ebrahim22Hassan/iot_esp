@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:segment_display/segment_display.dart';
 import '../cubit/led_cubit.dart';
 
 class ControlScreen extends StatefulWidget {
@@ -22,13 +23,7 @@ class _ControlScreenState extends State<ControlScreen>
       builder: (BuildContext context, LedState state) {
         LedCubit cubit = BlocProvider.of(context);
         //print(state);
-        return
-            // state is DataGetting
-            //   ? const Center(
-            //       child: CircularProgressIndicator(),
-            //     )
-            //   :
-            Scaffold(
+        return Scaffold(
           body: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -116,7 +111,20 @@ class _ControlScreenState extends State<ControlScreen>
                                     color: Colors.black,
                                     fontSize: 100,
                                   ),
-                                )
+                                ),
+                                // SevenSegmentDisplay(
+                                //   value: state is DataGetting
+                                //       ? "---"
+                                //       : "${cubit.sensorReading}",
+                                //   size: 8,
+                                //   characterSpacing: 10,
+                                //   backgroundColor: Colors.transparent,
+                                //   segmentStyle: HexSegmentStyle(
+                                //     enabledColor: Colors.black,
+                                //     disabledColor:
+                                //         Colors.grey.withOpacity(0.05),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -137,20 +145,6 @@ class _ControlScreenState extends State<ControlScreen>
                                 const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.black.withOpacity(0.2),
                           ),
-                          // width: MediaQuery.of(context).size.width / 2,
-                          // duration: const Duration(milliseconds: 900),
-                          // decoration: BoxDecoration(
-                          //   borderRadius: const BorderRadius.all(
-                          //     Radius.circular(20.0),
-                          //   ),
-                          //   border: Border.all(
-                          //     color: Colors.grey[300]!,
-                          //     width: 0.6,
-                          //   ),
-                          //   color: cubit.isActive
-                          //       ? const Color(0xffff5f5f)
-                          //       : Colors.white,
-                          // ),
                           child: Padding(
                             padding: const EdgeInsets.all(14.0),
                             child: Column(
@@ -229,9 +223,10 @@ class _ControlScreenState extends State<ControlScreen>
                                           cubit.motorChange();
                                         },
                                         value: cubit.motorActive,
-                                        activeColor: cubit.motorActive
-                                            ? Colors.white.withOpacity(0.4)
-                                            : Colors.black,
+                                        activeColor:
+                                            //cubit.motorActive ?
+                                            Colors.white.withOpacity(0.4),
+                                        //: Colors.black,
                                         trackColor: Colors.black,
                                       ),
                                     ),

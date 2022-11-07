@@ -129,7 +129,6 @@ class LedCubit extends Cubit<LedState> {
     final child = dataBase.child('esp/');
     int boolString = ledON ? 1 : 0;
     child.update({'LED': boolString});
-    //print(ledON);
     emit(LedChanged());
   }
 

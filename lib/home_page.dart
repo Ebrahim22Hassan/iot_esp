@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
         builder: (BuildContext context, LedState state) {
           LedCubit cubit = BlocProvider.of(context);
           if (state is DataGetting) {
-            print("Getting Data");
+            //print("Getting Data");
           }
           return ThemeSwitchingArea(
             child: SafeArea(
@@ -34,16 +34,14 @@ class HomePage extends StatelessWidget {
                     cubit.index = index;
                     cubit.changeCurrentScreen(cubit.index);
                   },
-                  //backgroundColor: cubit.activeBSColor[cubit.index],
                   backgroundColor: cubit.index == 1
                       ? cubit.activeColor[cubit.sensorReading / 14]
                           .withOpacity(0.4)
                       : cubit.activeBSColor[cubit.index],
-                  //color: cubit.activeBGColor[cubit.index],
                   color: cubit.index == 1
                       ? cubit.activeColor[cubit.sensorReading / 14]
                       : cubit.activeBGColor[cubit.index],
-                  animationDuration: const Duration(milliseconds: 500),
+                  animationDuration: const Duration(milliseconds: 400),
                   items: const [
                     Icon(Icons.table_chart_outlined),
                     Icon(Icons.home),
