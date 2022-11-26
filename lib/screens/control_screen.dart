@@ -49,7 +49,8 @@ class _ControlScreenState extends State<ControlScreen>
                 spawnMaxSpeed: 120,
                 spawnMinRadius: 5.0,
                 spawnMaxRadius: 10.0,
-                particleCount: cubit.motorActive ? 150 : 0,
+                particleCount:
+                    cubit.motor1Active || cubit.motor2Active ? 150 : 0,
               )),
               vsync: this,
               child: SafeArea(
@@ -134,109 +135,265 @@ class _ControlScreenState extends State<ControlScreen>
                         height: 30,
                       ),
 
-                      /// Motor ON/OFF Container
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: 150,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
-                            color: Colors.black.withOpacity(0.2),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/svg/speaker.svg',
-                                        color: cubit.motorActive
-                                            ? Colors.white
-                                            : Colors.black,
-                                        height: 30,
-                                      ),
-                                      const SizedBox(
-                                        height: 14,
-                                      ),
-                                      SizedBox(
-                                        width: 65,
-                                        child: Text(
-                                          "Motor",
-                                          style: TextStyle(
-                                              height: 1.2,
-                                              fontSize: 14,
-                                              color: cubit.motorActive
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
+                      Row(
+                        children: [
+                          /// Motor 1 ON/OFF Container
+                          Flexible(
+                            child: Container(
+                              height: 180,
+                              width: MediaQuery.of(context).size.width * 0.55,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20.0)),
+                                color: Colors.black.withOpacity(0.2),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          text: 'OFF',
-                                          style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14,
-                                              color: !cubit.motorActive
-                                                  ? Colors.white
+                                    Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/svg/speaker.svg',
+                                                  color: cubit.motor1Active
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  height: 30,
+                                                ),
+                                                const SizedBox(
+                                                  height: 14,
+                                                ),
+                                                SizedBox(
+                                                  width: 65,
+                                                  child: Text(
+                                                    "Motor 1",
+                                                    style: TextStyle(
+                                                        height: 1.2,
+                                                        fontSize: 14,
+                                                        color:
+                                                            cubit.motor1Active
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            "↑",
+                                            style: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold,
+                                              color: cubit.motor1Active
+                                                  ? Colors.black
                                                   : Colors.black
                                                       .withOpacity(0.3),
-                                              fontWeight: FontWeight.w500),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: '/',
-                                                style: TextStyle(
-                                                    color: Colors.black
-                                                        .withOpacity(0.3))),
-                                            TextSpan(
-                                              text: 'ON',
-                                              style: TextStyle(
-                                                color: cubit.motorActive
-                                                    ? Colors.white
-                                                    : Colors.black
-                                                        .withOpacity(0.3),
-                                              ),
                                             ),
-                                          ]),
-                                    ),
-                                    Transform.scale(
-                                      alignment: Alignment.center,
-                                      scaleY: 0.8,
-                                      scaleX: 0.85,
-                                      child: CupertinoSwitch(
-                                        onChanged: (val) {
-                                          cubit.motorChange();
-                                        },
-                                        value: cubit.motorActive,
-                                        activeColor:
-                                            //cubit.motorActive ?
-                                            Colors.white.withOpacity(0.4),
-                                        //: Colors.black,
-                                        trackColor: Colors.black,
+                                          ),
+                                        ],
                                       ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text: 'OFF',
+                                              style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14,
+                                                  color: !cubit.motor1Active
+                                                      ? Colors.white
+                                                      : Colors.black
+                                                          .withOpacity(0.3),
+                                                  fontWeight: FontWeight.w500),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text: '/',
+                                                    style: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.3))),
+                                                TextSpan(
+                                                  text: 'ON',
+                                                  style: TextStyle(
+                                                    color: cubit.motor1Active
+                                                        ? Colors.white
+                                                        : Colors.black
+                                                            .withOpacity(0.3),
+                                                  ),
+                                                ),
+                                              ]),
+                                        ),
+                                        Transform.scale(
+                                          alignment: Alignment.center,
+                                          scaleY: 0.8,
+                                          scaleX: 0.85,
+                                          child: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              cubit.motor1Change();
+                                            },
+                                            value: cubit.motor1Active,
+                                            activeColor:
+                                                //cubit.motorActive ?
+                                                Colors.white.withOpacity(0.4),
+                                            //: Colors.black,
+                                            trackColor: Colors.black,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+
+                          /// Motor 2 ON/OFF Container
+                          Flexible(
+                            child: Container(
+                              height: 180,
+                              width: MediaQuery.of(context).size.width * 0.55,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20.0)),
+                                color: Colors.black.withOpacity(0.2),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/svg/speaker.svg',
+                                                  color: cubit.motor2Active
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  height: 30,
+                                                ),
+                                                const SizedBox(
+                                                  height: 14,
+                                                ),
+                                                SizedBox(
+                                                  width: 65,
+                                                  child: Text(
+                                                    "Motor 2",
+                                                    style: TextStyle(
+                                                        height: 1.2,
+                                                        fontSize: 14,
+                                                        color:
+                                                            cubit.motor2Active
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Text(
+                                            "↓",
+                                            style: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold,
+                                              color: cubit.motor2Active
+                                                  ? Colors.black
+                                                  : Colors.black
+                                                      .withOpacity(0.3),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                              text: 'OFF',
+                                              style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14,
+                                                  color: !cubit.motor2Active
+                                                      ? Colors.white
+                                                      : Colors.black
+                                                          .withOpacity(0.3),
+                                                  fontWeight: FontWeight.w500),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text: '/',
+                                                    style: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.3))),
+                                                TextSpan(
+                                                  text: 'ON',
+                                                  style: TextStyle(
+                                                    color: cubit.motor2Active
+                                                        ? Colors.white
+                                                        : Colors.black
+                                                            .withOpacity(0.3),
+                                                  ),
+                                                ),
+                                              ]),
+                                        ),
+                                        Transform.scale(
+                                          alignment: Alignment.center,
+                                          scaleY: 0.8,
+                                          scaleX: 0.85,
+                                          child: CupertinoSwitch(
+                                            onChanged: (val) {
+                                              cubit.motor2Change();
+                                            },
+                                            value: cubit.motor2Active,
+                                            activeColor:
+                                                //cubit.motorActive ?
+                                                Colors.white.withOpacity(0.4),
+                                            //: Colors.black,
+                                            trackColor: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+
                       const SizedBox(
                         height: 30,
                       ),

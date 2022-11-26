@@ -29,9 +29,15 @@ class LedCubit extends Cubit<LedState> {
     emit(NavBarChanged());
   }
 
-  bool motorActive = false;
+  bool motor1Active = false;
   void updateColor() {
-    motorActive = !motorActive;
+    motor1Active = !motor1Active;
+    emit(ContainerColorChanged());
+  }
+
+  bool motor2Active = false;
+  void updateColor2(motorNum) {
+    motorNum = !motorNum;
     emit(ContainerColorChanged());
   }
 
@@ -132,12 +138,21 @@ class LedCubit extends Cubit<LedState> {
     emit(LedChanged());
   }
 
-  void motorChange() {
+  void motor1Change() {
     emit(MotorPressed());
-    motorActive = !motorActive;
+    motor1Active = !motor1Active;
     final child = dataBase.child('esp/');
-    int boolString = motorActive ? 1 : 0;
+    int boolString = motor1Active ? 1 : 0;
     child.update({'motor': boolString});
+    emit(MotorChanged());
+  }
+
+  void motor2Change() {
+    emit(MotorPressed());
+    motor2Active = !motor2Active;
+    final child = dataBase.child('esp/');
+    int boolString = motor2Active ? 1 : 0;
+    child.update({'motor2': boolString});
     emit(MotorChanged());
   }
 

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       initTheme: ThemeData.light(),
       builder: (p0, theme) {
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'IoT pH',
           theme: theme,
           debugShowCheckedModeBanner: false,
           home: const HomePage(),
