@@ -103,7 +103,7 @@ class LedCubit extends Cubit<LedState> {
     // });
     dataBase.onValue.listen((DatabaseEvent event) async {
       //final data = event.snapshot.value;
-      final ldrSnap = await dataBase.child('esp/LDR').get();
+      final ldrSnap = await dataBase.child('esp/pH').get();
       final minutesSnap = await dataBase.child('esp/minutes').get();
 
       sensorReading = ldrSnap.value;
@@ -118,7 +118,7 @@ class LedCubit extends Cubit<LedState> {
 
     dataBase.child('esp').onChildChanged.listen((event) {
       DataSnapshot snap = event.snapshot;
-      if (snap.key == 'LDR') {
+      if (snap.key == 'pH') {
         sensorReading = snap.value;
         emit(DataGot());
       }

@@ -107,7 +107,7 @@ class _ControlScreenState extends State<ControlScreen>
                                 Text(
                                   state is DataGetting
                                       ? "---"
-                                      : "${cubit.sensorReading}",
+                                      : "${cubit.sensorReading.toStringAsFixed(2)}",
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 100,
