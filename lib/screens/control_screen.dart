@@ -59,381 +59,32 @@ class _ControlScreenState extends State<ControlScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      /// Title
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "Smart Swimming Pool",
-                            style: TextStyle(
-                                fontSize: 28,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Icon(Icons.pool_outlined, size: 35),
-                        ],
-                      ),
+                      const TitleWidget(),
                       const Divider(
                         thickness: 4,
                       ),
                       const SizedBox(
-                        height: 50,
+                        height: 30,
                       ),
-
-                      /// pH Level Container
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.grey.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const Text(
-                                  "pH Level",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  state is DataGetting
-                                      ? "---"
-                                      : "${cubit.sensorReading.toStringAsFixed(2)}",
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 100,
-                                  ),
-                                ),
-                                // SevenSegmentDisplay(
-                                //   value: state is DataGetting
-                                //       ? "---"
-                                //       : "${cubit.sensorReading}",
-                                //   size: 8,
-                                //   characterSpacing: 10,
-                                //   backgroundColor: Colors.transparent,
-                                //   segmentStyle: HexSegmentStyle(
-                                //     enabledColor: Colors.black,
-                                //     disabledColor:
-                                //         Colors.grey.withOpacity(0.05),
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      PHLevelContainer(cubit: cubit),
+                      const SizedBox(
+                        height: 10,
                       ),
+                      TemperatureContainer(cubit: cubit),
                       const SizedBox(
                         height: 30,
                       ),
-
                       Row(
                         children: [
-                          /// Motor 1 ON/OFF Container
-                          Flexible(
-                            child: Container(
-                              height: 180,
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(20.0)),
-                                color: Colors.black.withOpacity(0.2),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/svg/speaker.svg',
-                                                  color: cubit.motor1Active
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  height: 30,
-                                                ),
-                                                const SizedBox(
-                                                  height: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 65,
-                                                  child: Text(
-                                                    "Motor 1",
-                                                    style: TextStyle(
-                                                        height: 1.2,
-                                                        fontSize: 14,
-                                                        color:
-                                                            cubit.motor1Active
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Text(
-                                            "↑",
-                                            style: TextStyle(
-                                              fontSize: 50,
-                                              fontWeight: FontWeight.bold,
-                                              color: cubit.motor1Active
-                                                  ? Colors.black
-                                                  : Colors.black
-                                                      .withOpacity(0.3),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                              text: 'OFF',
-                                              style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14,
-                                                  color: !cubit.motor1Active
-                                                      ? Colors.white
-                                                      : Colors.black
-                                                          .withOpacity(0.3),
-                                                  fontWeight: FontWeight.w500),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: '/',
-                                                    style: TextStyle(
-                                                        color: Colors.black
-                                                            .withOpacity(0.3))),
-                                                TextSpan(
-                                                  text: 'ON',
-                                                  style: TextStyle(
-                                                    color: cubit.motor1Active
-                                                        ? Colors.white
-                                                        : Colors.black
-                                                            .withOpacity(0.3),
-                                                  ),
-                                                ),
-                                              ]),
-                                        ),
-                                        Transform.scale(
-                                          alignment: Alignment.center,
-                                          scaleY: 0.8,
-                                          scaleX: 0.85,
-                                          child: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              cubit.motor1Change();
-                                            },
-                                            value: cubit.motor1Active,
-                                            activeColor:
-                                                //cubit.motorActive ?
-                                                Colors.white.withOpacity(0.4),
-                                            //: Colors.black,
-                                            trackColor: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          Motor1Container(cubit: cubit),
                           const SizedBox(
                             width: 20,
                           ),
-
-                          /// Motor 2 ON/OFF Container
-                          Flexible(
-                            child: Container(
-                              height: 180,
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(20.0)),
-                                color: Colors.black.withOpacity(0.2),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/svg/speaker.svg',
-                                                  color: cubit.motor2Active
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  height: 30,
-                                                ),
-                                                const SizedBox(
-                                                  height: 14,
-                                                ),
-                                                SizedBox(
-                                                  width: 65,
-                                                  child: Text(
-                                                    "Motor 2",
-                                                    style: TextStyle(
-                                                        height: 1.2,
-                                                        fontSize: 14,
-                                                        color:
-                                                            cubit.motor2Active
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Text(
-                                            "↓",
-                                            style: TextStyle(
-                                              fontSize: 50,
-                                              fontWeight: FontWeight.bold,
-                                              color: cubit.motor2Active
-                                                  ? Colors.black
-                                                  : Colors.black
-                                                      .withOpacity(0.3),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                              text: 'OFF',
-                                              style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14,
-                                                  color: !cubit.motor2Active
-                                                      ? Colors.white
-                                                      : Colors.black
-                                                          .withOpacity(0.3),
-                                                  fontWeight: FontWeight.w500),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: '/',
-                                                    style: TextStyle(
-                                                        color: Colors.black
-                                                            .withOpacity(0.3))),
-                                                TextSpan(
-                                                  text: 'ON',
-                                                  style: TextStyle(
-                                                    color: cubit.motor2Active
-                                                        ? Colors.white
-                                                        : Colors.black
-                                                            .withOpacity(0.3),
-                                                  ),
-                                                ),
-                                              ]),
-                                        ),
-                                        Transform.scale(
-                                          alignment: Alignment.center,
-                                          scaleY: 0.8,
-                                          scaleX: 0.85,
-                                          child: CupertinoSwitch(
-                                            onChanged: (val) {
-                                              cubit.motor2Change();
-                                            },
-                                            value: cubit.motor2Active,
-                                            activeColor:
-                                                //cubit.motorActive ?
-                                                Colors.white.withOpacity(0.4),
-                                            //: Colors.black,
-                                            trackColor: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          Motor2Container(cubit: cubit),
                         ],
                       ),
-
                       const SizedBox(
                         height: 30,
-                      ),
-
-                      /// LED ON/OFF Container
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            const Text("Control the LED:"),
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Center(
-                                child: ThemeSwitcher.withTheme(
-                                    builder: (p0, switcher, theme) {
-                                  return TextButton(
-                                    onPressed: () {
-                                      switcher.changeTheme(
-                                          theme: theme.brightness ==
-                                                  Brightness.light
-                                              ? ThemeData.dark()
-                                              : ThemeData.light());
-                                      cubit.ledChange();
-                                    },
-                                    child: Text(
-                                      cubit.ledON ? "LED Off" : "LED On",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: cubit.ledON
-                                            ? Colors.red
-                                            : Colors.lightGreen,
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
@@ -446,3 +97,426 @@ class _ControlScreenState extends State<ControlScreen>
     );
   }
 }
+
+class TitleWidget extends StatelessWidget {
+  const TitleWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: const [
+        Text(
+          "Smart Swimming Pool",
+          style: TextStyle(
+              fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        Icon(Icons.pool_outlined, size: 35),
+      ],
+    );
+  }
+}
+
+class PHLevelContainer extends StatelessWidget {
+  const PHLevelContainer({
+    super.key,
+    required this.cubit,
+  });
+
+  final LedCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text(
+                "pH Level",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                // state is DataGetting
+                //     ? "---"
+                //     :
+                "${cubit.sensorReading.toStringAsFixed(2)}",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 100,
+                ),
+              ),
+              // SevenSegmentDisplay(
+              //   value: state is DataGetting
+              //       ? "---"
+              //       : "${cubit.sensorReading}",
+              //   size: 8,
+              //   characterSpacing: 10,
+              //   backgroundColor: Colors.transparent,
+              //   segmentStyle: HexSegmentStyle(
+              //     enabledColor: Colors.black,
+              //     disabledColor:
+              //         Colors.grey.withOpacity(0.05),
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TemperatureContainer extends StatelessWidget {
+  const TemperatureContainer({
+    super.key,
+    required this.cubit,
+  });
+
+  final LedCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text(
+                "Temperature",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                // state is DataGetting
+                //     ? "---"
+                //     :
+                "${cubit.temperature.toStringAsFixed(2)}",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Motor2Container extends StatelessWidget {
+  const Motor2Container({
+    super.key,
+    required this.cubit,
+  });
+
+  final LedCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        height: 180,
+        width: MediaQuery.of(context).size.width * 0.55,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          color: Colors.black.withOpacity(0.2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/speaker.svg',
+                            color: cubit.motor2Active
+                                ? Colors.white
+                                : Colors.black,
+                            height: 30,
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          SizedBox(
+                            width: 65,
+                            child: Text(
+                              "Motor 2",
+                              style: TextStyle(
+                                  height: 1.2,
+                                  fontSize: 14,
+                                  color: cubit.motor2Active
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      "↓",
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: cubit.motor2Active
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                        text: 'OFF',
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            color: !cubit.motor2Active
+                                ? Colors.white
+                                : Colors.black.withOpacity(0.3),
+                            fontWeight: FontWeight.w500),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: '/',
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.3))),
+                          TextSpan(
+                            text: 'ON',
+                            style: TextStyle(
+                              color: cubit.motor2Active
+                                  ? Colors.white
+                                  : Colors.black.withOpacity(0.3),
+                            ),
+                          ),
+                        ]),
+                  ),
+                  Transform.scale(
+                    alignment: Alignment.center,
+                    scaleY: 0.8,
+                    scaleX: 0.85,
+                    child: CupertinoSwitch(
+                      onChanged: (val) {
+                        cubit.motor2Change();
+                      },
+                      value: cubit.motor2Active,
+                      activeColor:
+                          //cubit.motorActive ?
+                          Colors.white.withOpacity(0.4),
+                      //: Colors.black,
+                      trackColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Motor1Container extends StatelessWidget {
+  const Motor1Container({
+    super.key,
+    required this.cubit,
+  });
+
+  final LedCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        height: 180,
+        width: MediaQuery.of(context).size.width * 0.55,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          color: Colors.black.withOpacity(0.2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/speaker.svg',
+                            color: cubit.motor1Active
+                                ? Colors.white
+                                : Colors.black,
+                            height: 30,
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          SizedBox(
+                            width: 65,
+                            child: Text(
+                              "Motor 1",
+                              style: TextStyle(
+                                  height: 1.2,
+                                  fontSize: 14,
+                                  color: cubit.motor1Active
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      "↑",
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: cubit.motor1Active
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                        text: 'OFF',
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            color: !cubit.motor1Active
+                                ? Colors.white
+                                : Colors.black.withOpacity(0.3),
+                            fontWeight: FontWeight.w500),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: '/',
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.3))),
+                          TextSpan(
+                            text: 'ON',
+                            style: TextStyle(
+                              color: cubit.motor1Active
+                                  ? Colors.white
+                                  : Colors.black.withOpacity(0.3),
+                            ),
+                          ),
+                        ]),
+                  ),
+                  Transform.scale(
+                    alignment: Alignment.center,
+                    scaleY: 0.8,
+                    scaleX: 0.85,
+                    child: CupertinoSwitch(
+                      onChanged: (val) {
+                        cubit.motor1Change();
+                      },
+                      value: cubit.motor1Active,
+                      activeColor:
+                          //cubit.motorActive ?
+                          Colors.white.withOpacity(0.4),
+                      //: Colors.black,
+                      trackColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// /// LED ON/OFF Container
+// Expanded(
+// flex: 1,
+// child: Row(
+// children: [
+// const Text("Control the LED:"),
+// Padding(
+// padding: const EdgeInsets.all(15.0),
+// child: Center(
+// child: ThemeSwitcher.withTheme(
+// builder: (p0, switcher, theme) {
+// return TextButton(
+// onPressed: () {
+// switcher.changeTheme(
+// theme: theme.brightness ==
+// Brightness.light
+// ? ThemeData.dark()
+//     : ThemeData.light());
+// cubit.ledChange();
+// },
+// child: Text(
+// cubit.ledON ? "LED Off" : "LED On",
+// style: TextStyle(
+// fontSize: 15,
+// fontWeight: FontWeight.bold,
+// color: cubit.ledON
+// ? Colors.red
+//     : Colors.lightGreen,
+// ),
+// ),
+// );
+// }),
+// ),
+// ),
+// ],
+// ),
+// ),

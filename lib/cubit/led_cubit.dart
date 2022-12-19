@@ -13,8 +13,6 @@ class LedCubit extends Cubit<LedState> {
   LedCubit(this.sensorReading) : super(LedInitial());
 
   bool ledON = true;
-  var sensorReading;
-  var minutes;
   final dataBase = FirebaseDatabase.instance.ref();
 
   int index = 1;
@@ -29,6 +27,7 @@ class LedCubit extends Cubit<LedState> {
     emit(NavBarChanged());
   }
 
+  /// MOTORS CONTROL
   bool motor1Active = false;
   void updateColor() {
     motor1Active = !motor1Active;
@@ -83,43 +82,29 @@ class LedCubit extends Cubit<LedState> {
     Color(0xFFC421A0),
   ];
 
+  var sensorReading;
+  var minutes;
+  var temperature;
   void getDataB() {
     emit(DataGetting());
-    // dataBase.child('ESP').once().then((snap) {
-    //   sensorReading = snap.value['LDR'] is int
-    //       ? snap.value['LDR']
-    //       : int.parse(snap.value['LDR']);
-    //   minutes = snap.value['minutes'] is int
-    //       ? snap.value['minutes']
-    //       : int.parse(snap.value['minutes']);
-    //   rColor = snap.value['rColor'];
-    //   gColor = snap.value['gColor'];
-    //   bColor = snap.value['bColor'];
-    //   ledON = snap.value['LED'] == 1;
-    //   rgbColor = Color.fromRGBO(rColor, gColor, bColor, 1);
-    //   emit(DataGot());
-    // }).then((value) {
-    //   getJson();
-    // });
     dataBase.onValue.listen((DatabaseEvent event) async {
-      //final data = event.snapshot.value;
-      final ldrSnap = await dataBase.child('esp/pH').get();
+      final pHSnap = await dataBase.child('esp/pH').get();
+      final tempSnap = await dataBase.child('esp/temp').get();
       final minutesSnap = await dataBase.child('esp/minutes').get();
-
-      sensorReading = ldrSnap.value;
+      sensorReading = pHSnap.value;
+      temperature = tempSnap.value;
       minutes = minutesSnap.value;
-
       //print(data);
       //print(snap.value);
       emit(DataGot());
       getJson();
-      //getJson() as Map;
     });
-
     dataBase.child('esp').onChildChanged.listen((event) {
       DataSnapshot snap = event.snapshot;
-      if (snap.key == 'pH') {
+      DataSnapshot snap1 = event.snapshot;
+      if (snap.key == 'pH' && snap1.key == 'temp') {
         sensorReading = snap.value;
+        temperature = snap1.value;
         emit(DataGot());
       }
     });
@@ -138,6 +123,7 @@ class LedCubit extends Cubit<LedState> {
     emit(LedChanged());
   }
 
+  /// MOTORS WITH FIREBASE
   void motor1Change() {
     emit(MotorPressed());
     motor1Active = !motor1Active;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'cubit/bloc_observer.dart';
 import 'firebase_options.dart';
 import 'home_page.dart';
+import 'my_home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
