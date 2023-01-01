@@ -2,10 +2,10 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:iot_esp/screens/splash_screen.dart';
 import 'cubit/bloc_observer.dart';
 import 'firebase_options.dart';
 import 'home_page.dart';
-import 'my_home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           title: 'IoT pH',
           theme: theme,
           debugShowCheckedModeBanner: false,
-          home: const HomePage(),
+          home: const SplashScreen(),
         );
       },
     );

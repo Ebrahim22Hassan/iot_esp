@@ -1,5 +1,6 @@
 import 'package:animated_background/animated_background.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,37 +57,88 @@ class _ControlScreenState extends State<ControlScreen>
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const TitleWidget(),
-                      const Divider(
-                        thickness: 4,
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      PHLevelContainer(cubit: cubit),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TemperatureContainer(cubit: cubit),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        children: [
-                          Motor1Container(cubit: cubit),
-                          const SizedBox(
-                            width: 20,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const TitleWidget(),
+                        const Divider(
+                          thickness: 4,
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        PHLevelContainer(cubit: cubit, state: state),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TemperatureContainer(cubit: cubit, state: state),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        IgnorePointer(
+                          ignoring: cubit.ledON,
+                          child: Opacity(
+                            //duration: const Duration(milliseconds: 2),
+                            opacity: cubit.ledON ? 0.1 : 1.0,
+                            child: Row(
+                              children: [
+                                Motor1Container(cubit: cubit),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Motor2Container(cubit: cubit),
+                              ],
+                            ),
                           ),
-                          Motor2Container(cubit: cubit),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+
+                        /// Mode Container
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1.5,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.grey.withOpacity(0.5)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Mode:",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Center(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      cubit.ledChange();
+                                    },
+                                    child: Text(
+                                      cubit.ledON ? "Manual Mode" : "Auto Mode",
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                        color: cubit.ledON
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -109,10 +161,16 @@ class TitleWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: const [
-        Text(
-          "Smart Swimming Pool",
-          style: TextStyle(
-              fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
+        Expanded(
+          child: AutoSizeText(
+            "Smart Swimming Pool",
+            // maxFontSize: 35,
+            //stepGranularity: 10,
+            minFontSize: 20,
+            maxLines: 1,
+            style: TextStyle(
+                fontSize: 28, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
         ),
         Icon(Icons.pool_outlined, size: 35),
       ],
@@ -124,58 +182,58 @@ class PHLevelContainer extends StatelessWidget {
   const PHLevelContainer({
     super.key,
     required this.cubit,
+    required this.state,
   });
 
   final LedCubit cubit;
+  final LedState state;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                "pH Level",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text(
+              "pH Level",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                // state is DataGetting
-                //     ? "---"
-                //     :
-                "${cubit.sensorReading.toStringAsFixed(2)}",
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 100,
-                ),
+            ),
+            Text(
+              state is DataGetting
+                  ? "---"
+                  :
+                  //"${cubit.sensorReading}",
+                  "${cubit.sensorReading.toStringAsFixed(2)}",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 100,
               ),
-              // SevenSegmentDisplay(
-              //   value: state is DataGetting
-              //       ? "---"
-              //       : "${cubit.sensorReading}",
-              //   size: 8,
-              //   characterSpacing: 10,
-              //   backgroundColor: Colors.transparent,
-              //   segmentStyle: HexSegmentStyle(
-              //     enabledColor: Colors.black,
-              //     disabledColor:
-              //         Colors.grey.withOpacity(0.05),
-              //   ),
-              // ),
-            ],
-          ),
+            ),
+            // SevenSegmentDisplay(
+            //   value: state is DataGetting
+            //       ? "---"
+            //       : "${cubit.sensorReading}",
+            //   size: 8,
+            //   characterSpacing: 10,
+            //   backgroundColor: Colors.transparent,
+            //   segmentStyle: HexSegmentStyle(
+            //     enabledColor: Colors.black,
+            //     disabledColor:
+            //         Colors.grey.withOpacity(0.05),
+            //   ),
+            // ),
+          ],
         ),
       ),
     );
@@ -186,45 +244,45 @@ class TemperatureContainer extends StatelessWidget {
   const TemperatureContainer({
     super.key,
     required this.cubit,
+    required this.state,
   });
 
   final LedCubit cubit;
+  final LedState state;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 2,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                "Temperature",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Container(
+      width: MediaQuery.of(context).size.width / 2,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text(
+              "Temperature",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                // state is DataGetting
-                //     ? "---"
-                //     :
-                "${cubit.temperature.toStringAsFixed(2)}",
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                ),
+            ),
+            Text(
+              state is DataGetting
+                  ? "---"
+                  :
+                  //"${cubit.temperature}",
+                  "${cubit.temperature.toStringAsFixed(2)}",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 30,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

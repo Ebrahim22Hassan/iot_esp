@@ -55,6 +55,8 @@ dependencies:
   animations: ^2.0.3
   firebase_core_web: ^2.0.1
   segment_display: ^0.5.0
+  auto_size_text: ^3.0.0
+  flutter_spinkit: ^5.1.0
   # firebase_database_web: ^0.2.1+14
 
 dev_dependencies:
@@ -80,7 +82,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    # - assets/images/
+    - assets/images/
     - assets/svg/
   # To add assets to your application, add an assets section, like this:
   # assets:
