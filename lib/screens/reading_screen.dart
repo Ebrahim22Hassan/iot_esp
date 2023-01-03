@@ -181,7 +181,7 @@ class ReadingScreen extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    '${row!['value']}%',
+                    '${row!['value']}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

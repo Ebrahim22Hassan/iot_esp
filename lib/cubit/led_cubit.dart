@@ -151,10 +151,9 @@ class LedCubit extends Cubit<LedState> {
 
   Future getJson() async {
     emit(JsonGet());
-    // var url = Uri.parse(
-    //   "https://script.googleusercontent.com/macros/echo?user_content_key=AzV2E5t0_nErlSxJM-LT2DpwvOuxLOmetGvl8eAQMH6xucI36CqN7N0ZG12mY_bZ48y8Y1NVMrZNRVY0MXRDmKdd1T7ToMjym5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnAG_t5JAlCBYh-4pzFuo0hYylFyXMGeacPvHeSyhPRMZEZkQ5vpwvq4snJvFGrWJT3jeEKenHH9lcJhMnYxoaSFlBLShXJG4bw&lib=M_MTsbg1Oc4iS5ELx-TpVngHKiz3AQw03");
     var url = Uri.parse(
-        "https://script.google.com/macros/s/AKfycbxtotcYO5aDFqCwzqsAcbdX050bSTu1jUqVTSInq979UFwq9lZkgRhaUBjJYhmmGZjO/exec");
+        // "https://script.google.com/macros/s/AKfycbxtotcYO5aDFqCwzqsAcbdX050bSTu1jUqVTSInq979UFwq9lZkgRhaUBjJYhmmGZjO/exec");
+        "https://script.google.com/macros/s/AKfycbzYTxQsEsVY34YD4VPiGn8ZHZNMEhJMf_aJzE69gj92qlb_B2_qIzKoSeqLY9yLJuk/exec");
     json = await http.read(url).then((value) {
       ldrValues = jsonDecode(value);
       //print(ldrValues);
@@ -164,7 +163,7 @@ class LedCubit extends Cubit<LedState> {
       data = [];
       time = [];
       for (var element in dataUsed) {
-        data.add((element['value'].toDouble()) / 100);
+        data.add((element['value'].toDouble()) / 10);
         time.add(element['date'].split('T')[1].substring(0, 5));
       }
       emit(JsonGot());

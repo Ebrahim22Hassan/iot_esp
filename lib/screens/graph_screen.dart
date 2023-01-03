@@ -2,7 +2,6 @@ import 'package:draw_graph/draw_graph.dart';
 import 'package:draw_graph/models/feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../cubit/led_cubit.dart';
 
 class GraphScreen extends StatelessWidget {
@@ -16,7 +15,7 @@ class GraphScreen extends StatelessWidget {
         listener: (BuildContext context, LedState state) {},
         builder: (BuildContext context, LedState state) {
           LedCubit cubit = BlocProvider.of(context);
-          // print(cubit.data);
+          //print(cubit.data);
           // print('*****************');
           return Scaffold(
             body: state is JsonGet
@@ -80,11 +79,16 @@ class GraphScreen extends StatelessWidget {
                                   Size(cubit.data.length * 80.toDouble(), 400),
                               labelX: List.from(cubit.time.reversed),
                               labelY: const [
-                                '20%',
-                                '40%',
-                                '60%',
-                                '80%',
-                                '100%'
+                                '1',
+                                '2',
+                                '3',
+                                '4',
+                                '5',
+                                '6',
+                                '7',
+                                '8',
+                                '9',
+                                '10',
                               ],
                               graphColor: Colors.black,
                               graphOpacity: 0.1,

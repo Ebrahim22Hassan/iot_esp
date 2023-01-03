@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.3,
               child: Image.asset('assets/images/UTM-LOGO-FULL.png')),
           const Text(
             'Capstone Project',

@@ -121,10 +121,12 @@ class _ControlScreenState extends State<ControlScreen>
                                     onPressed: () {
                                       cubit.ledChange();
                                     },
-                                    child: Text(
+                                    child: AutoSizeText(
+                                      minFontSize: 15,
+                                      maxLines: 1,
                                       cubit.ledON ? "Manual Mode" : "Auto Mode",
                                       style: TextStyle(
-                                        fontSize: 25,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         color: cubit.ledON
                                             ? Colors.red
