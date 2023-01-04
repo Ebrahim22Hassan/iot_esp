@@ -7,12 +7,6 @@ import 'package:iot_esp/cubit/led_cubit.dart';
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // var db = DbConnect();
-  //
-  // Future getData() async {
-  //   return db.fetchData();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LedCubit>(

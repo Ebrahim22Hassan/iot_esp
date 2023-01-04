@@ -2,11 +2,15 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:iot_esp/screens/control_screen.dart';
 import 'package:iot_esp/screens/graph_screen.dart';
 import 'package:iot_esp/screens/reading_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:rainbow_color/rainbow_color.dart';
+import '../main.dart';
+import '../notification_class.dart';
+
 part 'led_state.dart';
 
 class LedCubit extends Cubit<LedState> {
@@ -29,12 +33,14 @@ class LedCubit extends Cubit<LedState> {
 
   /// MOTORS CONTROL
   bool motor1Active = false;
+
   void updateColor() {
     motor1Active = !motor1Active;
     emit(ContainerColorChanged());
   }
 
   bool motor2Active = false;
+
   void updateColor2(motorNum) {
     motorNum = !motorNum;
     emit(ContainerColorChanged());
@@ -85,6 +91,7 @@ class LedCubit extends Cubit<LedState> {
   var sensorReading;
   var minutes;
   var temperature;
+
   void getDataB() {
     emit(DataGetting());
     dataBase.onValue.listen((DatabaseEvent event) async {
@@ -97,7 +104,10 @@ class LedCubit extends Cubit<LedState> {
       //print(data);
       //print(snap.value);
       emit(DataGot());
-      getJson();
+      //getJson();
+      if (sensorReading > 7.8 || sensorReading < 7.0) {
+        getSound();
+      }
     });
     dataBase.child('esp').onChildChanged.listen((event) {
       DataSnapshot snap = event.snapshot;
@@ -168,6 +178,26 @@ class LedCubit extends Cubit<LedState> {
       }
       emit(JsonGot());
       return value;
+    });
+  }
+
+  ///******Sound********/
+  void getSound() {
+    dataBase.onValue.listen((event) async {
+      final sound = await dataBase.child('notification/status').get();
+      var soundStatus = sound.value.toString();
+      if (soundStatus == "1") {
+        Notify.showBigTextNotification(
+            title: "Smart Swimming Pool: ",
+            body: sensorReading > 7.8
+                ? "High pH Level: $sensorReading"
+                : "Low pH Level: $sensorReading",
+            fln: flutterLocalNotificationsPlugin);
+        final child = dataBase.child('notification/');
+        int spot = 0;
+        child.update({'status': spot});
+      }
+      //emit(SoundStatusSuccessState());
     });
   }
 }

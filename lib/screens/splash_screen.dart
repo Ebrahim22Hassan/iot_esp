@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iot_esp/home_page.dart';
 
+import '../main.dart';
+import '../notification_class.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -13,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    //Notify.initialize(flutterLocalNotificationsPlugin);
     Future.delayed(const Duration(seconds: 3)).then(
         (value) => Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => const HomePage(),

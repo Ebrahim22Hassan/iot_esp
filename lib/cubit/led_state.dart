@@ -32,3 +32,11 @@ class PhotoToked extends LedState {}
 class JsonGet extends LedState {}
 
 class JsonGot extends LedState {}
+
+class MessageGet extends LedState {}
+
+class MessageGot extends LedState {}
+
+class MessageSent extends LedState {}
+
+class SoundStatusSuccessState extends LedState {}

@@ -2,10 +2,14 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:iot_esp/screens/splash_screen.dart';
 import 'cubit/bloc_observer.dart';
 import 'firebase_options.dart';
 import 'home_page.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
