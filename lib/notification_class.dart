@@ -33,7 +33,7 @@ class Notify {
     var not = NotificationDetails(
       android: androidPlatformChannelSpecifics,
     );
-    //await fln.show(0, title, body, not);
-    await fln.periodicallyShow(0, title, body, interval, not);
+    await fln.show(0, title, body, not);
+    //await fln.periodicallyShow(0, title, body, interval, not);
   }
 }

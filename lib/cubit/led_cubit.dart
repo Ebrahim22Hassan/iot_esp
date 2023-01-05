@@ -190,8 +190,8 @@ class LedCubit extends Cubit<LedState> {
         Notify.showBigTextNotification(
             title: "Smart Swimming Pool: ",
             body: sensorReading > 7.8
-                ? "High pH Level: $sensorReading"
-                : "Low pH Level: $sensorReading",
+                ? "High pH Level: $sensorReading, Temperature: $temperature°"
+                : "Low pH Level: $sensorReading, Temperature: $temperature°",
             fln: flutterLocalNotificationsPlugin);
         final child = dataBase.child('notification/');
         int spot = 0;
