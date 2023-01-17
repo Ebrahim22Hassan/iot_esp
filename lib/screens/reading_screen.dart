@@ -121,7 +121,7 @@ class ReadingScreen extends StatelessWidget {
               const Expanded(
                 child: Center(
                   child: Text(
-                    'Reading',
+                    'pH Reading',
                     style: TextStyle(
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.bold,
@@ -181,7 +181,7 @@ class ReadingScreen extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    '${row!['value']}',
+                    '${row!['value'].toStringAsFixed(2)}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

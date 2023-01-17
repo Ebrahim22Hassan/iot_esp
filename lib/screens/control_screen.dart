@@ -351,7 +351,7 @@ class Motor2Container extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "↓",
+                      "↑",
                       style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
@@ -477,7 +477,7 @@ class Motor1Container extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "↑",
+                      "↓",
                       style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
